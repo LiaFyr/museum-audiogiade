@@ -1,10 +1,10 @@
 <head>
   <meta charset="UTF-8">
-  <title>Аудиогид — Редактирование - Экспозиция</title>
+  <title>Аудиогид — Редактирование — Экспозиция</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="style.css">
 </head>
-<style>
+<slyle>
 body {
   margin: 0;
   font-family: Arial;
@@ -387,140 +387,6 @@ button.save-btn {
     width: 100px;
   }
 </style>
-<body>
-  <header>
-    <h1>Аудиогид</h1>
-    <div class="navigation">
-      <nav>
-        <a href="#">созданнные музеи</a>
-      </nav>
-      <nav>
-        <a href="#">выход</a>
-      </nav>      
-    </div>
-  </header>
-
-  <div class="breadcrumb">
-    <a href="#">Россия</a> >
-    <a href="#">Москва</a> >
-    <a href="#">Палеонтологический музей</a> >
-    <strong>Название</strong>
-</div>
-  </div>
-
-  <main class="main-container">
-    <div class="left-column">
-      <div class="left">
-        <div class="image-wrapper">
-        <img id="previewImage" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/placeholder.png?raw=true" alt="Фото экспоната">
-      <div class="image-overlay">
-         <button class="remove-image" onclick="removeImage()">&times;</button>
-        <i class="fas fa-upload" onclick="document.getElementById('imageUpload').click()"></i>
-      </div>
-      </div>
-      <input type="file" id="imageUpload" accept="image/*" style="display:none">
-    </div>
-    <div class="right">
-      <div class="title-row">
-  <label>Название:</label>
-  <div class="lang-switch-wrapper">
-    <div class="lang-switch" onclick="toggleLangDropdown()">
-      <span id="current-lang">RU</span> <i class="fas fa-chevron-down"></i>
-    </div>
-    <ul class="lang-dropdown" id="lang-dropdown">
-      <li onclick="setLanguage('RU')">RU</li>
-      <li onclick="setLanguage('EN')">EN</li>
-    </ul>
-  </div>
-        
-</div>
-      <input type="text" id="titleInput" />
-      <label>Описание:</label>
-      <textarea id="descriptionInput" rows="15"></textarea>
-      <button class="save-btn" onclick="saveChanges()">Сохранить изменения</button>
-    </div>
-    </div>
-    <div class="right-column">
-      <div class="exhibit-header">
-        <h3 id="exhibit-list-title">Список экспонатов</h3>
-        <a href="#" class="add-button">+</a>
-      </div>
-      <div class="exhibit-scroll">
-      <div class="exhibit-item">
-        <div class="exhibit-controls">
-            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
-            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
-        </div>
-        <a href="#" class="exhibit-link">
-          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Tridacna.jpg?raw=true"/>
-          <div><strong>Тридакна</strong></div>          
-        </a>
-        <button class="remove-button">&times;</button>
-      </div>
-      <div class="exhibit-item">
-        <div class="exhibit-controls">
-            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
-            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
-        </div>
-        <a href="#" class="exhibit-link">
-          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Ammonitaceras.jpg?raw=true"/>
-          <div><strong>Аммонитоцерас</strong></div>          
-        </a>
-        <button class="remove-button">&times;</button>
-      </div>
-      <div class="exhibit-item">
-        <div class="exhibit-controls">
-            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
-            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
-        </div>
-        <a href="#" class="exhibit-link">
-          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Vendobionta.jpg?raw=true"/>
-          <div><strong>Вендобионты</strong></div>          
-        </a>
-        <button class="remove-button">&times;</button>
-      </div>
-</div>      
-</div>
-</main>
-<footer class="player">
-<audio id="audio" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/audios/Room2-ru.mp3?raw=true"></audio>
-<div class="progress-bar">
-<div class="progress-fill"></div>
-</div>
-<div class="time-labels">
-<span>00:00</span>
-<span>00:00</span>
-</div>
-<div class="controls-wrapper">
-<div class="audio-controls">
-        <i class="fas fa-upload" id="uploadIcon" onclick="document.getElementById('audioUpload').click()"></i>
-        <i class="fas fa-times" id="removeAudioIcon" style="display:none" onclick="removeAudio()"></i>
-        <input type="file" id="audioUpload" accept="audio/*" style="display:none">
-      </div>
-  <div class="controls">
-<button class="rewind-backward">
-<span class="small-ten">10</span>
-<i class="fas fa-rotate-left"></i>
-</button>
-<a href="#" id="prev-exhibit-link">
-<button id="prev-exhibit"><i class="fas fa-backward"></i></button>
-</a>
-<button class="play"><i class="fas fa-play"></i></button>
-<a href="#" id="next-exhibit-link">
-<button id="next-exhibit"><i class="fas fa-forward"></i></button>
-</a>
-<button class="rewind-forward">
-<i class="fas fa-rotate-right"></i><span class="small-ten">10</span>
-</button>
-</div>
-<div class="volume-control">
-<i class="fas fa-volume-up"></i>
-<div class="volume-bar">
-<div class="volume-fill" style="width: 100%;"></div>
-</div>
-</div>
-</div>
-</footer>
 <script>
 let currentLang = "RU";
     const contentByLang = {
@@ -730,5 +596,177 @@ function showNotification(message) {
       audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
     }
   });
+function updateArrowStates() {
+    const items = document.querySelectorAll(".exhibit-item");
+    items.forEach((item, index) => {
+      const upButton = item.querySelector(".fa-arrow-up").parentElement;
+      const downButton = item.querySelector(".fa-arrow-down").parentElement;
+
+      upButton.disabled = index === 0;
+      downButton.disabled = index === items.length - 1;
+    });
+  }
+
+  function moveItem(item, direction) {
+    const parent = item.parentElement;
+    if (direction === "up" && item.previousElementSibling) {
+      parent.insertBefore(item, item.previousElementSibling);
+    } else if (direction === "down" && item.nextElementSibling) {
+      parent.insertBefore(item.nextElementSibling, item);
+    }
+    updateArrowStates();
+  }
+
+  document.querySelectorAll(".exhibit-item").forEach(item => {
+    const upBtn = item.querySelector(".fa-arrow-up").parentElement;
+    const downBtn = item.querySelector(".fa-arrow-down").parentElement;
+
+    upBtn.addEventListener("click", () => moveItem(item, "up"));
+    downBtn.addEventListener("click", () => moveItem(item, "down"));
+  });
+
+  // === Удаление экспоната ===
+  document.querySelectorAll(".remove-button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.closest(".exhibit-item").remove();
+      updateArrowStates();
+    });
+  });
+
+  updateArrowStates();
 </script>
+<body>
+  <header>
+    <h1>Аудиогид</h1>
+    <div class="navigation">
+      <nav>
+        <a href="#">созданнные музеи</a>
+      </nav>
+      <nav>
+        <a href="#">выход</a>
+      </nav>      
+    </div>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="#">Россия</a> >
+    <a href="#">Москва</a> >
+    <a href="#">Палеонтологический музей</a> >
+    <strong>Название</strong>
+</div>
+  </div>
+
+  <main class="main-container">
+    <div class="left-column">
+      <div class="left">
+        <div class="image-wrapper">
+        <img id="previewImage" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/placeholder.png?raw=true" alt="Фото экспоната">
+      <div class="image-overlay">
+         <button class="remove-image" onclick="removeImage()">&times;</button>
+        <i class="fas fa-upload" onclick="document.getElementById('imageUpload').click()"></i>
+      </div>
+      </div>
+      <input type="file" id="imageUpload" accept="image/*" style="display:none">
+    </div>
+    <div class="right">
+      <div class="title-row">
+  <label>Название:</label>
+  <div class="lang-switch-wrapper">
+    <div class="lang-switch" onclick="toggleLangDropdown()">
+      <span id="current-lang">RU</span> <i class="fas fa-chevron-down"></i>
+    </div>
+    <ul class="lang-dropdown" id="lang-dropdown">
+      <li onclick="setLanguage('RU')">RU</li>
+      <li onclick="setLanguage('EN')">EN</li>
+    </ul>
+  </div>
+        
+</div>
+      <input type="text" id="titleInput" />
+      <label>Описание:</label>
+      <textarea id="descriptionInput" rows="15"></textarea>
+      <button class="save-btn" onclick="saveChanges()">Сохранить изменения</button>
+    </div>
+    </div>
+    <div class="right-column">
+      <div class="exhibit-header">
+        <h3 id="exhibit-list-title">Список экспонатов</h3>
+        <a href="#" class="add-button">+</a>
+      </div>
+      <div class="exhibit-scroll">
+      <div class="exhibit-item">
+        <div class="exhibit-controls">
+            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
+            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
+        </div>
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Tridacna.jpg?raw=true"/>
+          <div><strong>Тридакна</strong></div>          
+        </a>
+        <button class="remove-button">&times;</button>
+      </div>
+      <div class="exhibit-item">
+        <div class="exhibit-controls">
+            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
+            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
+        </div>
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Ammonitaceras.jpg?raw=true"/>
+          <div><strong>Аммонитоцерас</strong></div>          
+        </a>
+        <button class="remove-button">&times;</button>
+      </div>
+      <div class="exhibit-item">
+        <div class="exhibit-controls">
+            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
+            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
+        </div>
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Vendobionta.jpg?raw=true"/>
+          <div><strong>Вендобионты</strong></div>          
+        </a>
+        <button class="remove-button">&times;</button>
+      </div>
+</div>      
+</div>
+</main>
+<footer class="player">
+<audio id="audio" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/audios/Room2-ru.mp3?raw=true"></audio>
+<div class="progress-bar">
+<div class="progress-fill"></div>
+</div>
+<div class="time-labels">
+<span>00:00</span>
+<span>00:00</span>
+</div>
+<div class="controls-wrapper">
+<div class="audio-controls">
+        <i class="fas fa-upload" id="uploadIcon" onclick="document.getElementById('audioUpload').click()"></i>
+        <i class="fas fa-times" id="removeAudioIcon" style="display:none" onclick="removeAudio()"></i>
+        <input type="file" id="audioUpload" accept="audio/*" style="display:none">
+      </div>
+  <div class="controls">
+<button class="rewind-backward">
+<span class="small-ten">10</span>
+<i class="fas fa-rotate-left"></i>
+</button>
+<a href="#" id="prev-exhibit-link">
+<button id="prev-exhibit"><i class="fas fa-backward"></i></button>
+</a>
+<button class="play"><i class="fas fa-play"></i></button>
+<a href="#" id="next-exhibit-link">
+<button id="next-exhibit"><i class="fas fa-forward"></i></button>
+</a>
+<button class="rewind-forward">
+<i class="fas fa-rotate-right"></i><span class="small-ten">10</span>
+</button>
+</div>
+<div class="volume-control">
+<i class="fas fa-volume-up"></i>
+<div class="volume-bar">
+<div class="volume-fill" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+</footer>
 </body>

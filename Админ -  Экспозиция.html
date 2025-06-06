@@ -1,0 +1,734 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Аудиогид — Редактирование - Экспозиция</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em 2em;
+  background: #444;
+  color: #fff;
+  border-bottom: 1px solid #aaa;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header nav a {
+  margin-left: 2em;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navigation{
+  display: flex;
+}
+
+.breadcrumb {
+  font-size: 0.9em;
+  text-align: center;
+  color: #555;
+  padding: 1em 2em;
+  background: #f5f5f5;
+  border-bottom: 1px solid #aaa;
+}
+
+.breadcrumb a{
+  text-decoration: none;
+  color: #555;
+  
+}
+
+.main-container {
+  display: flex;
+  padding: 1em 2em;
+  gap: 20px;
+}
+
+.left-column {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex: 2;
+}
+
+.left-column .right, .left-column .left {
+  flex: 1;
+}
+
+.left-column img {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  border-radius: 8px;
+}
+
+.left-column .text {
+  max-height: 400px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 500px;
+}
+
+.image-wrapper img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.image-wrapper:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-overlay i {
+  font-size: 2em;
+  color: white;
+}
+
+.remove-image {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2em;
+  cursor: pointer;
+}
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}
+
+.title-row h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.lang-switch-wrapper {
+  position: relative;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lang-switch {
+  padding: 0.5em;
+}
+
+.lang-dropdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 100;
+}
+
+.lang-dropdown li {
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lang-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.left-column .right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.right label {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+button.save-btn {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.right-column {
+  flex: 1;
+  padding: 1em;
+  background: #fafafa;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.exhibit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.add-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+.add-button:hover {
+  color: green;
+}
+
+.right-column .exhibit-scroll {
+  max-height: 400px; /* та же высота, что у изображения */
+}
+
+.exhibit-scroll {
+  overflow-y: auto;
+  max-height: 100%;
+}
+.right-column h3 {
+  margin-top: 0;
+}
+.exhibit-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+  position: relative;
+}
+.exhibit-item img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 4px;
+}
+.exhibit-item div {
+  font-size: 0.95em;
+}
+
+.exhibit-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.exhibit-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.exhibit-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-right: 10px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+  padding: 2px;
+}
+
+.icon-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 20px;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.remove-button:hover {
+  color: red;
+}
+
+.audio-controls{
+      position: absolute;
+      left: 25px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #uploadIcon.active-upload {
+      color: green;
+    }
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background: #f5f5f5;
+    gap: 10px;
+  }
+
+  .progress-bar, .volume-bar {
+    width: 80%;
+    height: 6px;
+    background: #bbb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill, .volume-fill {
+    height: 100%;
+    width: 0%;
+    background: #000;
+  }
+
+  .time-labels {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .controls-wrapper {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .controls button {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  .controls .play {
+    font-size: 35px;
+  }
+
+  .rewind-backward .small-ten, .rewind-forward .small-ten {
+    font-size: 13px;
+}
+  .volume-control {
+    position: absolute;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .volume-bar {
+    width: 100px;
+  }
+</style>
+<body>
+  <header>
+    <h1>Аудиогид</h1>
+    <div class="navigation">
+      <nav>
+        <a href="#">созданнные музеи</a>
+      </nav>
+      <nav>
+        <a href="#">выход</a>
+      </nav>      
+    </div>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="#">Россия</a> >
+    <a href="#">Москва</a> >
+    <a href="#">Палеонтологический музей</a> >
+    <strong>Название</strong>
+</div>
+  </div>
+
+  <main class="main-container">
+    <div class="left-column">
+      <div class="left">
+        <div class="image-wrapper">
+        <img id="previewImage" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/placeholder.png?raw=true" alt="Фото экспоната">
+      <div class="image-overlay">
+         <button class="remove-image" onclick="removeImage()">&times;</button>
+        <i class="fas fa-upload" onclick="document.getElementById('imageUpload').click()"></i>
+      </div>
+      </div>
+      <input type="file" id="imageUpload" accept="image/*" style="display:none">
+    </div>
+    <div class="right">
+      <div class="title-row">
+  <label>Название:</label>
+  <div class="lang-switch-wrapper">
+    <div class="lang-switch" onclick="toggleLangDropdown()">
+      <span id="current-lang">RU</span> <i class="fas fa-chevron-down"></i>
+    </div>
+    <ul class="lang-dropdown" id="lang-dropdown">
+      <li onclick="setLanguage('RU')">RU</li>
+      <li onclick="setLanguage('EN')">EN</li>
+    </ul>
+  </div>
+        
+</div>
+      <input type="text" id="titleInput" />
+      <label>Описание:</label>
+      <textarea id="descriptionInput" rows="15"></textarea>
+      <button class="save-btn" onclick="saveChanges()">Сохранить изменения</button>
+    </div>
+    </div>
+    <div class="right-column">
+      <div class="exhibit-header">
+        <h3 id="exhibit-list-title">Список экспонатов</h3>
+        <a href="#" class="add-button">+</a>
+      </div>
+      <div class="exhibit-scroll">
+      <div class="exhibit-item">
+        <div class="exhibit-controls">
+            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
+            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
+        </div>
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Tridacna.jpg?raw=true"/>
+          <div><strong>Тридакна</strong></div>          
+        </a>
+        <button class="remove-button">&times;</button>
+      </div>
+      <div class="exhibit-item">
+        <div class="exhibit-controls">
+            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
+            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
+        </div>
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Ammonitaceras.jpg?raw=true"/>
+          <div><strong>Аммонитоцерас</strong></div>          
+        </a>
+        <button class="remove-button">&times;</button>
+      </div>
+      <div class="exhibit-item">
+        <div class="exhibit-controls">
+            <button class="icon-button"><i class="fas fa-arrow-up"></i></button>
+            <button class="icon-button"><i class="fas fa-arrow-down"></i></button>
+        </div>
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Vendobionta.jpg?raw=true"/>
+          <div><strong>Вендобионты</strong></div>          
+        </a>
+        <button class="remove-button">&times;</button>
+      </div>
+</div>      
+</div>
+</main>
+<footer class="player">
+<audio id="audio" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/audios/Room2-ru.mp3?raw=true"></audio>
+<div class="progress-bar">
+<div class="progress-fill"></div>
+</div>
+<div class="time-labels">
+<span>00:00</span>
+<span>00:00</span>
+</div>
+<div class="controls-wrapper">
+<div class="audio-controls">
+        <i class="fas fa-upload" id="uploadIcon" onclick="document.getElementById('audioUpload').click()"></i>
+        <i class="fas fa-times" id="removeAudioIcon" style="display:none" onclick="removeAudio()"></i>
+        <input type="file" id="audioUpload" accept="audio/*" style="display:none">
+      </div>
+  <div class="controls">
+<button class="rewind-backward">
+<span class="small-ten">10</span>
+<i class="fas fa-rotate-left"></i>
+</button>
+<a href="#" id="prev-exhibit-link">
+<button id="prev-exhibit"><i class="fas fa-backward"></i></button>
+</a>
+<button class="play"><i class="fas fa-play"></i></button>
+<a href="#" id="next-exhibit-link">
+<button id="next-exhibit"><i class="fas fa-forward"></i></button>
+</a>
+<button class="rewind-forward">
+<i class="fas fa-rotate-right"></i><span class="small-ten">10</span>
+</button>
+</div>
+<div class="volume-control">
+<i class="fas fa-volume-up"></i>
+<div class="volume-bar">
+<div class="volume-fill" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+let currentLang = "RU";
+    const contentByLang = {
+      RU: { title: "Название", text: "Описание на русском", audioSrc: "", breadcrumb: ["Россия", "Москва", "Палеонтологический музей", "Название"]},
+      EN: { title: "Name", text: "Description in English", audioSrc: "", breadcrumb: ["Russia", "Moscow", "Paleontological museum", "Name"]}
+    };
+
+    function toggleLangDropdown() {
+      const dropdown = document.getElementById("lang-dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById("current-lang").textContent = lang;
+      document.getElementById("lang-dropdown").style.display = "none";
+      
+
+      const content = contentByLang[lang];
+      document.getElementById("titleInput").value = content.title;
+      document.getElementById("descriptionInput").value = content.text;
+      document.getElementById("audio").src = content.audioSrc || '';
+      updateAudioUI();
+      
+      const breadcrumb = document.querySelector(".breadcrumb");
+  breadcrumb.innerHTML = content.breadcrumb
+    .map((item, index) =>
+      index === content.breadcrumb.length - 1
+        ? `<strong>${item}</strong>`
+        : `<span>${item}</span>`
+    )
+    .join(" > ");
+    }
+
+    function saveChanges() {
+  const title = document.getElementById("titleInput").value;
+  const text = document.getElementById("descriptionInput").value;
+  const audioSrc = document.getElementById("audio").src;
+
+  contentByLang[currentLang] = {
+    title,
+    text,
+    audioSrc,
+    breadcrumb: [...(contentByLang[currentLang].breadcrumb || [])]
+  };
+
+  const breadcrumb = contentByLang[currentLang].breadcrumb;
+  if (breadcrumb.length > 0) {
+    breadcrumb[breadcrumb.length - 1] = title;
+  }
+
+  showNotification(`Изменения для ${currentLang} сохранены`);
+}
+
+// Функция для всплывающего уведомления
+function showNotification(message) {
+  const notif = document.createElement("div");
+  notif.className = "custom-notification";
+  notif.textContent = message;
+  document.body.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.add("show");
+  }, 10); // немного задержки, чтобы CSS-анимация сработала
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => document.body.removeChild(notif), 300); // после анимации убрать
+  }, 2500);
+}
+
+    function removeImage() {
+      document.getElementById("previewImage").src = 'https://github.com/LiaFyr/museum-audiogiade/blob/main/images/placeholder.png?raw=true';
+    }
+
+    function removeAudio() {
+      document.getElementById("audio").src = '';
+      updateAudioUI();
+    }
+
+    function updateAudioUI() {
+      const audio = document.getElementById("audio");
+      const hasAudio = !!audio.src && audio.src !== location.href;
+      audio.classList.toggle("disabled", !hasAudio);
+      document.querySelectorAll(".controls button").forEach(btn => btn.disabled = !hasAudio);
+      document.getElementById("removeAudioIcon").style.display = hasAudio ? 'inline' : 'none';
+      const uploadIcon = document.getElementById("uploadIcon");
+        if (hasAudio) {
+  uploadIcon.classList.add("active-upload");
+}       else {
+  uploadIcon.classList.remove("active-upload");
+}
+    }
+
+    document.getElementById("imageUpload").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          document.getElementById("previewImage").src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById("audioUpload").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const audioURL = URL.createObjectURL(file);
+        document.getElementById("audio").src = audioURL;
+        updateAudioUI();
+      }
+    });
+
+    setLanguage(currentLang);
+
+  const audio = document.getElementById("audio");
+
+  const progressBar = document.querySelector(".progress-bar");
+  const progressFill = document.querySelector(".progress-fill");
+  const timeLabels = document.querySelectorAll(".time-labels span");
+  
+  const volumeBar = document.querySelector(".volume-bar");
+  const volumeFill = document.querySelector(".volume-fill");
+
+  const playButton = document.querySelector(".play i");
+  const rewindBack = document.querySelector(".rewind-backward");
+  const rewindForward = document.querySelector(".rewind-forward");
+
+  let isDraggingProgress = false;
+  let isDraggingVolume = false;
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+  
+  audio.addEventListener("loadedmetadata", () => {
+    timeLabels[1].textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener("timeupdate", () => {
+    if (!isDraggingProgress && isFinite(audio.duration)) {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + "%";
+      timeLabels[0].textContent = formatTime(audio.currentTime);
+      timeLabels[1].textContent = formatTime(audio.duration);
+    }
+  });
+
+  progressBar.addEventListener("mousedown", (e) => {
+    isDraggingProgress = true;
+    updateProgress(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingProgress) updateProgress(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingProgress = false;
+  });
+
+  function updateProgress(e) {
+    const rect = progressBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    if (!isFinite(audio.duration)) return;
+    progressFill.style.width = percent * 100 + "%";
+    audio.currentTime = percent * audio.duration;
+  }
+
+  volumeBar.addEventListener("mousedown", (e) => {
+    isDraggingVolume = true;
+    updateVolume(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingVolume) updateVolume(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingVolume = false;
+  });
+
+  function updateVolume(e) {
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    volumeFill.style.width = percent * 100 + "%";
+    audio.volume = percent;
+  }
+
+  playButton.parentElement.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playButton.classList.remove("fa-play");
+      playButton.classList.add("fa-pause");
+    } else {
+      audio.pause();
+      playButton.classList.remove("fa-pause");
+      playButton.classList.add("fa-play");
+    }
+  });
+
+  rewindBack.addEventListener("click", () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+  });
+
+  rewindForward.addEventListener("click", () => {
+    if (isFinite(audio.duration)) {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    }
+  });
+</script>
+</body>

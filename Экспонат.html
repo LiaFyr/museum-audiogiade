@@ -1,0 +1,447 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Аудиогид — Экспонат</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em 2em;
+  background: #fff;
+  border-bottom: 1px solid #aaa;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header nav a {
+  margin-left: 2em;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.breadcrumb {
+  font-size: 0.9em;
+  text-align: center;
+  color: #555;
+  padding: 1em 2em;
+  background: #f5f5f5;
+  border-bottom: 1px solid #aaa;
+}
+
+.breadcrumb a{
+  text-decoration: none;
+  color: #555;
+  
+}
+
+.container {
+  display: flex;
+  padding: 1em 2em;
+  border-bottom: 1px solid #aaa;
+}
+
+.left {
+  flex: 1;
+  padding-right: 1em;
+}
+
+.left img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.right {
+  flex: 1;
+  padding-left: 1em;
+  position: relative;
+}
+
+.lang-switch-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lang-switch {
+  padding: 0.5em;
+}
+
+.lang-dropdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 100;
+}
+
+.lang-dropdown li {
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lang-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.right h2 {
+  margin-top: 0;
+}
+
+.right .text {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 1em;
+  line-height: 1.6;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background: #f5f5f5;
+    gap: 10px;
+  }
+
+  .progress-bar, .volume-bar {
+    width: 80%;
+    height: 6px;
+    background: #bbb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill, .volume-fill {
+    height: 100%;
+    width: 0%;
+    background: #000;
+  }
+
+  .time-labels {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .controls-wrapper {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .controls button {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  .controls .play {
+    font-size: 35px;
+  }
+
+  .rewind-backward .small-ten, .rewind-forward .small-ten {
+    font-size: 13px;
+}
+  .volume-control {
+    position: absolute;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .volume-bar {
+    width: 100px;
+  }
+</style>
+<script>
+const contentByLang = {
+  RU: {
+    title: "Тридакна",
+    text: `Тип Mollusca – Моллюски
+Класс Bivalvia – Двустворчатые моллюски
+Отряд Veneroida
+Tridacna gigas – Гигантская тридакна
+Местонахождение: острова Тонга, Тихий океан
+Возраст: современный
+
+Тридакна – гигантский двустворчатый моллюск, распространенный в тропической части Тихого океана. Максимальный известный размер раковины — 137 см. Это один из крупнейших представителей класса двустворок за всю его историю. Такого же или даже немного большего размера достигали меловые родственники современных устриц – иноцерамы.`,
+    audioSrc: "https://media.izi.travel/c8741a16-c940-4efa-9424-d071060b6802/4ee02897-a288-4058-8133-f6ea9dd672a7.m4a",
+    breadcrumb: ["Россия", "Москва", "Палеонтологический музей", "Зал 2. Докембрий и ранний палеозой", "Тридакна"]
+  },
+  EN: {
+    title: "Tridacna",
+    text: `Phyllum Mollusca – Molluscs
+Class Bivalvia – Bivalved mollusks
+Order Veneroida – Veneroideans
+Tridacna gigas – Giant Tridacna
+Locality: Tonga Islands, Pacific Ocean
+Age: Recent
+
+Tridacna is a giant bivalve mollusc, widespread in the tropical part of the Pacific Ocean. Maximum of a known shell size is 137 cm. It is one of the biggest representatives of Bivalvia class throughout its history. Inoceramus – Cretaceous relative of modern oysters was of the same size or even bigger.`,
+    audioSrc: "https://media.izi.travel/c8741a16-c940-4efa-9424-d071060b6802/b87b9ac7-57bf-4e93-8575-6d0b6cc43e13.m4a",
+    breadcrumb: ["Russia", "Moscow", "Paleontological museum", "Precambrian and Early Paleozoic", "Tridacna"]
+  }
+};
+
+function toggleLangDropdown() {
+    const dropdown = document.getElementById("lang-dropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+function setLanguage(lang) {
+  document.getElementById("current-lang").textContent = lang;
+  document.getElementById("lang-dropdown").style.display = "none";
+
+  const content = contentByLang[lang];
+
+  if (content) {
+    // Обновление заголовка и текста
+    document.querySelector(".right h2").textContent = content.title;
+    document.querySelector(".right .text").textContent = content.text;
+
+    // Обновление аудио
+    const audio = document.getElementById("audio");
+    audio.src = content.audioSrc;
+    audio.currentTime = 0;
+    document.querySelector(".progress-fill").style.width = "0%";
+    document.querySelector(".time-labels span").textContent = "0:00";
+
+    const playIcon = document.querySelector(".play i");
+    playIcon.classList.remove("fa-pause");
+    playIcon.classList.add("fa-play");
+
+    audio.addEventListener("loadedmetadata", () => {
+      const timeLabels = document.querySelectorAll(".time-labels span");
+      timeLabels[1].textContent = formatTime(audio.duration);
+    });
+
+    const breadcrumb = document.querySelector(".breadcrumb");
+    breadcrumb.innerHTML = "";
+
+    content.breadcrumb.forEach((part, index) => {
+      if (index < content.breadcrumb.length - 1) {
+        const a = document.createElement("a");
+        a.href = "#";
+        a.textContent = part;
+        breadcrumb.appendChild(a);
+        breadcrumb.append(" > ");
+      } else {
+        const strong = document.createElement("strong");
+        strong.textContent = part;
+        breadcrumb.appendChild(strong);
+      }
+    });
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const audio = document.getElementById("audio");
+
+  const progressBar = document.querySelector(".progress-bar");
+  const progressFill = document.querySelector(".progress-fill");
+  const timeLabels = document.querySelectorAll(".time-labels span");
+  
+  const volumeBar = document.querySelector(".volume-bar");
+  const volumeFill = document.querySelector(".volume-fill");
+
+  const playButton = document.querySelector(".play i");
+  const rewindBack = document.querySelector(".rewind-backward");
+  const rewindForward = document.querySelector(".rewind-forward");
+
+  let isDraggingProgress = false;
+  let isDraggingVolume = false;
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+  
+  audio.addEventListener("loadedmetadata", () => {
+    timeLabels[1].textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener("timeupdate", () => {
+    if (!isDraggingProgress && isFinite(audio.duration)) {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + "%";
+      timeLabels[0].textContent = formatTime(audio.currentTime);
+      timeLabels[1].textContent = formatTime(audio.duration);
+    }
+  });
+
+  progressBar.addEventListener("mousedown", (e) => {
+    isDraggingProgress = true;
+    updateProgress(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingProgress) updateProgress(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingProgress = false;
+  });
+
+  function updateProgress(e) {
+    const rect = progressBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    if (!isFinite(audio.duration)) return;
+    progressFill.style.width = percent * 100 + "%";
+    audio.currentTime = percent * audio.duration;
+  }
+
+  volumeBar.addEventListener("mousedown", (e) => {
+    isDraggingVolume = true;
+    updateVolume(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingVolume) updateVolume(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingVolume = false;
+  });
+
+  function updateVolume(e) {
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    volumeFill.style.width = percent * 100 + "%";
+    audio.volume = percent;
+  }
+
+  playButton.parentElement.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playButton.classList.remove("fa-play");
+      playButton.classList.add("fa-pause");
+    } else {
+      audio.pause();
+      playButton.classList.remove("fa-pause");
+      playButton.classList.add("fa-play");
+    }
+  });
+
+  rewindBack.addEventListener("click", () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+  });
+
+  rewindForward.addEventListener("click", () => {
+    if (isFinite(audio.duration)) {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    }
+  });
+});
+</script>
+<body>
+  <header>
+    <h1>Аудиогид</h1>
+    <nav>
+      <a href="#">создайте аудиогид</a>
+    </nav>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="#">Россия</a> >
+    <a href="#">Москва</a> >
+    <a href="#">Палеонтологический музей</a> >
+    <a href="#">Зал 2. Докембрий и ранний палеозой</a> >
+    <strong>Тридакна</strong>
+</div>
+  </div>
+
+  <main class="container">
+    <div class="left">
+      <img src="https://media.izi.travel/c8741a16-c940-4efa-9424-d071060b6802/7ec0995d-a7f0-434d-aaed-0e031da20235_800x600.jpg" alt="Фото экспоната">
+    </div>
+    <div class="right">
+      <div class="lang-switch-wrapper">
+  <div class="lang-switch" onclick="toggleLangDropdown()">
+    <span id="current-lang">RU</span> <i class="fas fa-chevron-down"></i>
+  </div>
+  <ul class="lang-dropdown" id="lang-dropdown">
+    <li onclick="setLanguage('RU')">RU</li>
+    <li onclick="setLanguage('EN')">EN</li>
+  </ul>
+</div>
+      <h2>Тридакна</h2>
+      <div class="text">
+        <p>Тип Mollusca – Моллюски
+Класс Bivalvia – Двустворчатые моллюски
+Отряд Veneroida
+Tridacna gigas – Гигантская тридакна
+Местонахождение: острова Тонга, Тихий океан
+Возраст: современный
+
+Тридакна – гигантский двустворчатый моллюск, распространенный в тропической части Тихого океана. Максимальный известный размер раковины — 137 см. Это один из крупнейших представителей класса двустворок за всю его историю. Такого же или даже немного большего размера достигали меловые родственники современных устриц – иноцерамы.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="player">
+    <audio id="audio" src="https://media.izi.travel/c8741a16-c940-4efa-9424-d071060b6802/4ee02897-a288-4058-8133-f6ea9dd672a7.m4a"></audio>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div class="time-labels">
+      <span>00:00</span>
+      <span>00:00</span>
+    </div>
+    <div class="controls-wrapper">
+      <div class="controls">
+        <button class="rewind-backward">
+          <span class="small-ten">10</span>
+  <i class="fas fa-rotate-left"></i>
+        </button>
+        <a href="#" id="prev-exhibit-link">
+          <button id="prev-exhibit"><i class="fas fa-backward"></i></button>
+        </a>
+        <button class="play"><i class="fas fa-play"></i></button>
+        <a href="#" id="next-exhibit-link">
+          <button id="next-exhibit"><i class="fas fa-forward"></i></button>
+        </a>
+        <button class="rewind-forward">
+          <i class="fas fa-rotate-right"></i><span class="small-ten">10</span>
+        </button>
+      </div>
+      <div class="volume-control">
+        <i class="fas fa-volume-up"></i>
+        <div class="volume-bar">
+          <div class="volume-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+

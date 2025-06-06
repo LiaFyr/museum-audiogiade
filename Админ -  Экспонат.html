@@ -1,0 +1,514 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Аудиогид — Редактирование - Экспонат</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em 2em;
+  background: #444;
+  color: #fff;
+  border-bottom: 1px solid #aaa;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header nav a {
+  margin-left: 2em;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navigation{
+  display: flex;
+}
+
+.breadcrumb {
+  font-size: 0.9em;
+  text-align: center;
+  color: #555;
+  padding: 1em 2em;
+  background: #f5f5f5;
+  border-bottom: 1px solid #aaa;
+}
+
+.breadcrumb a{
+  text-decoration: none;
+  color: #555;
+  
+}
+
+.container {
+      display: flex; flex-wrap: wrap;
+      padding: 20px;
+    }
+    .left, .right {
+      flex: 1; min-width: 300px;
+      padding: 10px;
+    }
+    .left { position: relative; text-align: center; }
+    #previewImage {
+      width: 100%; max-width: 500px;
+      border: 1px solid #ccc; border-radius: 8px;
+    }
+    .right label {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .image-overlay {
+      position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 100%; max-width: 500px; height: 100%;
+      display: flex; justify-content: center; align-items: center;
+      background: rgba(0,0,0,0.4);
+      opacity: 0; transition: 0.3s;
+      cursor: pointer;
+    }
+    .left:hover .image-overlay { opacity: 1; }
+    .image-overlay i {
+      color: white; font-size: 2em;
+    }
+    .remove-image {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: none;
+      color: white;
+      border: none; 
+      font-size: 2em;
+      cursor: pointer;
+    }
+    .lang-switch-wrapper {
+      float: right; margin-top: -30px;
+      position: relative; z-index: 2;
+    }
+    .lang-switch {
+      background: #ddd;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .lang-dropdown {
+      display: none;
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      list-style: none;
+      margin: 0; padding: 0;
+      width: 100%;
+    }
+    .lang-dropdown li {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .lang-dropdown li:hover {
+      background: #eee;
+    }
+    textarea, input[type="text"] {
+      width: 100%; font-size: 1em; padding: 5px;
+    }
+button.save-btn {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+    .audio-controls{
+      position: absolute;
+      left: 25px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #uploadIcon.active-upload {
+      color: green;
+    }
+    .player {
+      background: #f5f5f5;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .progress-bar, .volume-bar {
+      width: 80%; height: 6px;
+      background: #bbb; border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill, .volume-fill {
+      height: 100%; width: 0%;
+      background: #000;
+    }
+    .time-labels {
+      width: 80%;
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: #555;
+    }
+    .controls-wrapper {
+      width: 80%;
+      display: flex; justify-content: center;
+      align-items: center; position: relative;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+    .controls button {
+      background: none; border: none;
+      font-size: 25px; cursor: pointer;
+    }
+    .controls .play { font-size: 35px; }
+    .volume-control {
+      position: absolute;
+      right: 25px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .volume-bar { width: 100px; }
+    .rewind-backward .small-ten, .rewind-forward .small-ten {
+      font-size: 13px;
+    }
+    .audio-controls {
+      display: flex;
+      align-items: center;
+      margin: 5px 0 15px 0;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+    .audio-controls i {
+      font-size: 1.3em;
+      cursor: pointer;
+    }
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+.custom-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.custom-notification.show {
+  opacity: 1;
+}
+</style>
+<body>
+  <header>
+    <h1>Аудиогид</h1>
+    <div class="navigation">
+      <nav>
+        <a href="#">созданнные музеи</a>
+      </nav>
+      <nav>
+        <a href="#">выход</a>
+      </nav>      
+    </div>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="#">Россия</a> >
+    <a href="#">Москва</a> >
+    <a href="#">Палеонтологический музей</a> >
+    <a href="#">Зал 2. Докембрий и ранний палеозой</a> >
+    <strong>Название</strong>
+</div>
+  </div>
+<main class="container">
+    <div class="left">
+      <img id="previewImage" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/placeholder.png?raw=true" alt="Фото экспоната">
+      <div class="image-overlay">
+         <button class="remove-image" onclick="removeImage()">&times;</button>
+        <i class="fas fa-upload" onclick="document.getElementById('imageUpload').click()"></i>
+      </div>
+      <input type="file" id="imageUpload" accept="image/*" style="display:none">
+    </div>
+    <div class="right">
+        
+      <label>Название:</label>
+      <span class="lang-switch-wrapper">
+          <div class="lang-switch" onclick="toggleLangDropdown()">
+            <span id="current-lang">RU</span> <i class="fas fa-chevron-down"></i>
+          </div>
+          <ul class="lang-dropdown" id="lang-dropdown">
+            <li onclick="setLanguage('RU')">RU</li>
+            <li onclick="setLanguage('EN')">EN</li>
+          </ul>
+        </span>
+      <input type="text" id="titleInput" />
+      <label>Описание:</label>
+      <textarea id="descriptionInput" rows="10"></textarea>
+      
+      <button class="save-btn" onclick="saveChanges()">Сохранить изменения</button>
+    </div>
+  </main>
+  <footer class="player">
+    <audio id="audio" class="disabled"></audio>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="time-labels">
+      <span>00:00</span>
+      <span>00:00</span>
+    </div>
+    <div class="controls-wrapper">
+      <div class="audio-controls">
+        <i class="fas fa-upload" id="uploadIcon" onclick="document.getElementById('audioUpload').click()"></i>
+        <i class="fas fa-times" id="removeAudioIcon" style="display:none" onclick="removeAudio()"></i>
+        <input type="file" id="audioUpload" accept="audio/*" style="display:none">
+      </div>
+      <div class="controls">
+        <button class="rewind-backward" disabled><span class="small-ten">10</span><i class="fas fa-rotate-left"></i></button>
+        <a href="#" id="prev-exhibit-link"><button id="prev-exhibit" disabled><i class="fas fa-backward"></i></button></a>
+        <button class="play" disabled><i class="fas fa-play"></i></button>
+        <a href="#" id="next-exhibit-link"><button id="next-exhibit" disabled><i class="fas fa-forward"></i></button></a>
+        <button class="rewind-forward" disabled><i class="fas fa-rotate-right"></i><span class="small-ten">10</span></button>
+      </div>
+      <div class="volume-control">
+        <i class="fas fa-volume-up"></i>
+        <div class="volume-bar"><div class="volume-fill" style="width: 100%;"></div></div>
+      </div>
+    </div>
+  </footer>
+</footer>
+<script>
+let currentLang = "RU";
+    const contentByLang = {
+      RU: { title: "Название", text: "Описание на русском", audioSrc: "", breadcrumb: ["Россия", "Москва", "Палеонтологический музей", "Зал 2. Докембрий и ранний палеозой", "Название"] },
+      EN: { title: "Name", text: "Description in English", audioSrc: "", breadcrumb: ["Russia", "Moscow", "Paleontological museum", "Precambrian and Early Paleozoic", "Name"]
+ }
+    };
+
+    function toggleLangDropdown() {
+      const dropdown = document.getElementById("lang-dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById("current-lang").textContent = lang;
+      document.getElementById("lang-dropdown").style.display = "none";
+
+      const content = contentByLang[lang];
+      document.getElementById("titleInput").value = content.title;
+      document.getElementById("descriptionInput").value = content.text;
+      document.getElementById("audio").src = content.audioSrc || '';
+      updateAudioUI();
+      
+      const breadcrumb = document.querySelector(".breadcrumb");
+  breadcrumb.innerHTML = content.breadcrumb
+    .map((item, index) =>
+      index === content.breadcrumb.length - 1
+        ? `<strong>${item}</strong>`
+        : `<span>${item}</span>`
+    )
+    .join(" > ");
+    }
+
+    function saveChanges() {
+  const title = document.getElementById("titleInput").value;
+  const text = document.getElementById("descriptionInput").value;
+  const audioSrc = document.getElementById("audio").src;
+
+  contentByLang[currentLang] = {
+    title,
+    text,
+    audioSrc,
+    breadcrumb: [...(contentByLang[currentLang].breadcrumb || [])]
+  };
+
+  const breadcrumb = contentByLang[currentLang].breadcrumb;
+  if (breadcrumb.length > 0) {
+    breadcrumb[breadcrumb.length - 1] = title;
+  }
+
+  showNotification(`Изменения для ${currentLang} сохранены`);
+}
+
+// Функция для всплывающего уведомления
+function showNotification(message) {
+  const notif = document.createElement("div");
+  notif.className = "custom-notification";
+  notif.textContent = message;
+  document.body.appendChild(notif);
+
+  setTimeout(() => {
+    notif.classList.add("show");
+  }, 10); // немного задержки, чтобы CSS-анимация сработала
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    setTimeout(() => document.body.removeChild(notif), 300); // после анимации убрать
+  }, 2500);
+}
+
+    function removeImage() {
+      document.getElementById("previewImage").src = 'https://github.com/LiaFyr/museum-audiogiade/blob/main/images/placeholder.png?raw=true';
+    }
+
+    function removeAudio() {
+      document.getElementById("audio").src = '';
+      updateAudioUI();
+    }
+
+    function updateAudioUI() {
+      const audio = document.getElementById("audio");
+      const hasAudio = !!audio.src && audio.src !== location.href;
+      audio.classList.toggle("disabled", !hasAudio);
+      document.querySelectorAll(".controls button").forEach(btn => btn.disabled = !hasAudio);
+      document.getElementById("removeAudioIcon").style.display = hasAudio ? 'inline' : 'none';
+      const uploadIcon = document.getElementById("uploadIcon");
+        if (hasAudio) {
+  uploadIcon.classList.add("active-upload");
+}       else {
+  uploadIcon.classList.remove("active-upload");
+}
+    }
+
+    document.getElementById("imageUpload").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          document.getElementById("previewImage").src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById("audioUpload").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const audioURL = URL.createObjectURL(file);
+        document.getElementById("audio").src = audioURL;
+        updateAudioUI();
+      }
+    });
+
+    setLanguage(currentLang);
+
+  const audio = document.getElementById("audio");
+
+  const progressBar = document.querySelector(".progress-bar");
+  const progressFill = document.querySelector(".progress-fill");
+  const timeLabels = document.querySelectorAll(".time-labels span");
+  
+  const volumeBar = document.querySelector(".volume-bar");
+  const volumeFill = document.querySelector(".volume-fill");
+
+  const playButton = document.querySelector(".play i");
+  const rewindBack = document.querySelector(".rewind-backward");
+  const rewindForward = document.querySelector(".rewind-forward");
+
+  let isDraggingProgress = false;
+  let isDraggingVolume = false;
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+  
+  audio.addEventListener("loadedmetadata", () => {
+    timeLabels[1].textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener("timeupdate", () => {
+    if (!isDraggingProgress && isFinite(audio.duration)) {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + "%";
+      timeLabels[0].textContent = formatTime(audio.currentTime);
+      timeLabels[1].textContent = formatTime(audio.duration);
+    }
+  });
+
+  progressBar.addEventListener("mousedown", (e) => {
+    isDraggingProgress = true;
+    updateProgress(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingProgress) updateProgress(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingProgress = false;
+  });
+
+  function updateProgress(e) {
+    const rect = progressBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    if (!isFinite(audio.duration)) return;
+    progressFill.style.width = percent * 100 + "%";
+    audio.currentTime = percent * audio.duration;
+  }
+
+  volumeBar.addEventListener("mousedown", (e) => {
+    isDraggingVolume = true;
+    updateVolume(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingVolume) updateVolume(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingVolume = false;
+  });
+
+  function updateVolume(e) {
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    volumeFill.style.width = percent * 100 + "%";
+    audio.volume = percent;
+  }
+
+  playButton.parentElement.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playButton.classList.remove("fa-play");
+      playButton.classList.add("fa-pause");
+    } else {
+      audio.pause();
+      playButton.classList.remove("fa-pause");
+      playButton.classList.add("fa-play");
+    }
+  });
+
+  rewindBack.addEventListener("click", () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+  });
+
+  rewindForward.addEventListener("click", () => {
+    if (isFinite(audio.duration)) {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    }
+  });
+
+</script>
+</body>

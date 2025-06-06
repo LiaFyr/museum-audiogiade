@@ -1,0 +1,577 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Аудиогид — Экспозиция</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em 2em;
+  background: #fff;
+  border-bottom: 1px solid #aaa;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header nav a {
+  margin-left: 2em;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.breadcrumb {
+  font-size: 0.9em;
+  text-align: center;
+  color: #555;
+  padding: 1em 2em;
+  background: #f5f5f5;
+  border-bottom: 1px solid #aaa;
+}
+
+.breadcrumb a{
+  text-decoration: none;
+  color: #555;
+  
+}
+
+.main-container {
+  display: flex;
+  padding: 1em 2em;
+  gap: 20px;
+}
+
+.left-column {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex: 2;
+}
+
+.left-column .right, .left-column .left {
+  flex: 1;
+}
+
+.left-column img {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  border-radius: 8px;
+}
+
+.left-column .text {
+  max-height: 400px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+}
+
+.title-row h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.lang-switch-wrapper {
+  position: relative;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lang-switch {
+  padding: 0.5em;
+}
+
+.lang-dropdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 100;
+}
+
+.lang-dropdown li {
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lang-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.left-column h2 {
+  margin-top: 0;
+}
+
+.right-column {
+  flex: 1;
+  padding: 1em;
+  background: #fafafa;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-column .exhibit-scroll {
+  max-height: 400px; /* та же высота, что у изображения */
+}
+
+.exhibit-scroll {
+  overflow-y: auto;
+  max-height: 100%;
+}
+.right-column h3 {
+  margin-top: 0;
+}
+.exhibit-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+.exhibit-item img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 4px;
+}
+.exhibit-item div {
+  font-size: 0.95em;
+}
+
+.exhibit-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.exhibit-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background: #f5f5f5;
+    gap: 10px;
+  }
+
+  .progress-bar, .volume-bar {
+    width: 80%;
+    height: 6px;
+    background: #bbb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill, .volume-fill {
+    height: 100%;
+    width: 0%;
+    background: #000;
+  }
+
+  .time-labels {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .controls-wrapper {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .controls button {
+    background: none;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  .controls .play {
+    font-size: 35px;
+  }
+
+  .rewind-backward .small-ten, .rewind-forward .small-ten {
+    font-size: 13px;
+}
+  .volume-control {
+    position: absolute;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .volume-bar {
+    width: 100px;
+  }
+</style>
+<script>
+const contentByLang = {
+  RU: {
+    title: "Зал 2. Докембрий и ранний палеозой",
+    text: `Добро пожаловать в зал «Докембрий и ранний палеозой» Палеонтологического музея.
+Этот зал посвящён самым древним эпохам в истории жизни на Земле — временам, когда только начинали формироваться первые формы жизни.
+
+Вы стоите у экспозиции, которая рассказывает о том, как, миллиарды лет назад, в водах первобытных океанов появились простейшие организмы. Именно в этот период зародились цианобактерии — крошечные, но крайне важные существа, благодаря которым на планете появился кислород.
+
+Следом за ними, на протяжении миллионов лет, эволюция породила всё более сложные формы жизни — от мягкотелых вендофауны до первых организмов с твёрдым скелетом, как, например, тридакны и аммонитоцерасы, которые вы видите в витринах зала.
+
+Докембрий и ранний палеозой — это эпохи великих биологических экспериментов. Здесь вы узнаете о строматолитах — древнейших следах жизнедеятельности, о разнообразии морских беспозвоночных и о первых шагах живого мира к освоению суши.
+
+Загляните в глубину времени и проследите путь жизни от микроскопических бактерий до первых сложных организмов.
+Этот путь — основа всего живого на нашей планете.`,
+    audioSrc: "https://github.com/LiaFyr/museum-audiogiade/blob/main/audios/Room2-ru.mp3?raw=true",
+    breadcrumb: ["Россия", "Москва", "Палеонтологический музей", "Зал 2. Докембрий и ранний палеозой"],
+    exhibitListTitle: "Список экспонатов",
+    exhibits: ["Тридакна", "Аммонитоцерас", "Вендобионты", "Цианобактериальный мат", "Столбчатый строматолит миньярия"]
+  },
+  EN: {
+    title: "Room 2. Precambrian and Early Paleozoic, Invertebrates and plants",
+    text: `Welcome to the “Precambrian and Early Paleozoic” hall of the Paleontological Museum.
+
+This section is devoted to the earliest stages of life on Earth. Here, you will discover what the first inhabitants of our planet looked like, how they lived, and how they gradually evolved.
+
+In the Precambrian period, life began with simple microorganisms. The earliest forms were single-celled and lived in the oceans. Among them, cyanobacteria were especially important — they produced oxygen through photosynthesis, changing Earth’s atmosphere and laying the foundation for all future life.
+
+Displayed in this hall are stromatolites — layered structures formed by cyanobacteria. These formations are among the oldest evidence of life on Earth, dating back over 3 billion years.
+
+With the start of the Paleozoic era, life became more complex. The first multicellular organisms appeared, along with invertebrates with shells and skeletons. Fossils of ammonites, trilobites, and other marine creatures show the diversity of life that once filled ancient seas.
+
+Take a look at the Tridacna shell — one of the largest bivalve mollusks. You’ll also find rare remains of Vendobionts, mysterious ancient organisms whose classification remains uncertain to this day.
+
+This exhibition offers a unique glimpse into life hundreds of millions of years ago. We invite you to explore the displays and imagine what Earth was like long before the age of dinosaurs.`,
+    audioSrc: "https://github.com/LiaFyr/museum-audiogiade/blob/main/audios/Room2-en.mp3?raw=true",
+    breadcrumb: ["Russia", "Moscow", "Paleontological museum", "Room 2.Precambrian and Early Paleozoic"],
+    exhibitListTitle: "Exhibit list",
+    exhibits: ["Tridacna", "Ammonitaceras", "Vendobionta", "Cyanobacterial mat", "Columnar stromatolite Minjaria"]
+  }
+};
+
+function toggleLangDropdown() {
+    const dropdown = document.getElementById("lang-dropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+function setLanguage(lang) {
+  document.getElementById("current-lang").textContent = lang;
+  document.getElementById("lang-dropdown").style.display = "none";
+
+  const content = contentByLang[lang];
+
+  if (content) {
+    // Обновление заголовка и текста
+    document.querySelector(".right h2").textContent = content.title;
+    document.querySelector(".right .text").textContent = content.text;
+
+    // Обновление аудио
+    const audio = document.getElementById("audio");
+    audio.src = content.audioSrc;
+    audio.currentTime = 0;
+    document.querySelector(".progress-fill").style.width = "0%";
+    document.querySelector(".time-labels span").textContent = "0:00";
+
+    const playIcon = document.querySelector(".play i");
+    playIcon.classList.remove("fa-pause");
+    playIcon.classList.add("fa-play");
+
+    audio.addEventListener("loadedmetadata", () => {
+      const timeLabels = document.querySelectorAll(".time-labels span");
+      timeLabels[1].textContent = formatTime(audio.duration);
+    });
+
+    // Обновление хлебных крошек
+    const breadcrumb = document.querySelector(".breadcrumb");
+    breadcrumb.innerHTML = "";
+    content.breadcrumb.forEach((part, index) => {
+      if (index < content.breadcrumb.length - 1) {
+        const a = document.createElement("a");
+        a.href = "#";
+        a.textContent = part;
+        breadcrumb.appendChild(a);
+        breadcrumb.append(" > ");
+      } else {
+        const strong = document.createElement("strong");
+        strong.textContent = part;
+        breadcrumb.appendChild(strong);
+      }
+    });
+
+
+    const listHeading = document.querySelector(".right-column h3");
+    if (listHeading) {
+      listHeading.textContent = content.exhibitListTitle;
+    }
+
+    const exhibitItems = document.querySelectorAll(".exhibit-item");
+    content.exhibits.forEach((title, index) => {
+      const container = exhibitItems[index];
+      if (container) {
+        const info = container.querySelector(".exhibit-link div");
+        if (info) {
+          info.innerHTML = `<strong>${title}</strong>`;
+        }
+      }
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const audio = document.getElementById("audio");
+
+  const progressBar = document.querySelector(".progress-bar");
+  const progressFill = document.querySelector(".progress-fill");
+  const timeLabels = document.querySelectorAll(".time-labels span");
+  
+  const volumeBar = document.querySelector(".volume-bar");
+  const volumeFill = document.querySelector(".volume-fill");
+
+  const playButton = document.querySelector(".play i");
+  const rewindBack = document.querySelector(".rewind-backward");
+  const rewindForward = document.querySelector(".rewind-forward");
+
+  let isDraggingProgress = false;
+  let isDraggingVolume = false;
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+  
+  audio.addEventListener("loadedmetadata", () => {
+    timeLabels[1].textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener("timeupdate", () => {
+    if (!isDraggingProgress && isFinite(audio.duration)) {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + "%";
+      timeLabels[0].textContent = formatTime(audio.currentTime);
+      timeLabels[1].textContent = formatTime(audio.duration);
+    }
+  });
+
+  progressBar.addEventListener("mousedown", (e) => {
+    isDraggingProgress = true;
+    updateProgress(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingProgress) updateProgress(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingProgress = false;
+  });
+
+  function updateProgress(e) {
+    const rect = progressBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    if (!isFinite(audio.duration)) return;
+    progressFill.style.width = percent * 100 + "%";
+    audio.currentTime = percent * audio.duration;
+  }
+
+  volumeBar.addEventListener("mousedown", (e) => {
+    isDraggingVolume = true;
+    updateVolume(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isDraggingVolume) updateVolume(e);
+  });
+  window.addEventListener("mouseup", () => {
+    isDraggingVolume = false;
+  });
+
+  function updateVolume(e) {
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    volumeFill.style.width = percent * 100 + "%";
+    audio.volume = percent;
+  }
+
+  playButton.parentElement.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playButton.classList.remove("fa-play");
+      playButton.classList.add("fa-pause");
+    } else {
+      audio.pause();
+      playButton.classList.remove("fa-pause");
+      playButton.classList.add("fa-play");
+    }
+  });
+
+  rewindBack.addEventListener("click", () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+  });
+
+  rewindForward.addEventListener("click", () => {
+    if (isFinite(audio.duration)) {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    }
+  });
+});
+</script>
+<body>
+  <header>
+    <h1>Аудиогид</h1>
+    <nav>
+      <a href="#">создайте аудиогид</a>
+    </nav>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="#">Россия</a> >
+    <a href="#">Москва</a> >
+    <a href="#">Палеонтологический музей</a> >
+    <strong>Зал 2. Докембрий и ранний палеозой</strong>
+</div>
+  </div>
+
+  <main class="main-container">
+    <div class="left-column">
+      <div class="left">
+      <img src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Room2.jpg?raw=true" alt="Фото экспоната">
+    </div>
+    <div class="right">
+      <div class="title-row">
+  <h2>Зал 2. Докембрий и ранний палеозой, беспозвоночные животные и растения</h2>
+  <div class="lang-switch-wrapper">
+    <div class="lang-switch" onclick="toggleLangDropdown()">
+      <span id="current-lang">RU</span> <i class="fas fa-chevron-down"></i>
+    </div>
+    <ul class="lang-dropdown" id="lang-dropdown">
+      <li onclick="setLanguage('RU')">RU</li>
+      <li onclick="setLanguage('EN')">EN</li>
+    </ul>
+  </div>
+</div>
+      <div class="text">
+        <p>Добро пожаловать в зал «Докембрий и ранний палеозой» Палеонтологического музея.
+Этот зал посвящён самым древним эпохам в истории жизни на Земле — временам, когда только начинали формироваться первые формы жизни.
+
+Вы стоите у экспозиции, которая рассказывает о том, как, миллиарды лет назад, в водах первобытных океанов появились простейшие организмы. Именно в этот период зародились цианобактерии — крошечные, но крайне важные существа, благодаря которым на планете появился кислород.
+
+Следом за ними, на протяжении миллионов лет, эволюция породила всё более сложные формы жизни — от мягкотелых вендофауны до первых организмов с твёрдым скелетом, как, например, тридакны и аммонитоцерасы, которые вы видите в витринах зала.
+
+Докембрий и ранний палеозой — это эпохи великих биологических экспериментов. Здесь вы узнаете о строматолитах — древнейших следах жизнедеятельности, о разнообразии морских беспозвоночных и о первых шагах живого мира к освоению суши.
+
+Загляните в глубину времени и проследите путь жизни от микроскопических бактерий до первых сложных организмов.
+Этот путь — основа всего живого на нашей планете.</p>
+      </div>
+    </div>
+    </div>
+    <div class="right-column">
+      <h3>Список экспонатов</h3>
+      <div class="exhibit-scroll">
+      <div class="exhibit-item">
+        <a href="#" class="exhibit-link">
+          <img alt="Exhibit 1" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Tridacna.jpg?raw=true"/>
+          <div><strong>Тридакна</strong></div>
+        </a>
+      </div>
+<div class="exhibit-item">
+<a href="#" class="exhibit-link">
+  <img alt="Exhibit 2" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Ammonitaceras.jpg?raw=true"/>
+<div><strong>Аммонитоцерас</strong></div>
+  </a>
+  </div>
+<div class="exhibit-item">
+<a href="#" class="exhibit-link">
+  <img alt="Exhibit 3" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Vendobionta.jpg?raw=true"/>
+<div><strong>Вендобионты</strong></div>
+  </a>
+  </div>
+<div class="exhibit-item">
+<a href="#" class="exhibit-link">
+  <img alt="Exhibit 4" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Cyanobacterial-mat.jpg?raw=true"/>
+<div><strong>Цианобактериальный мат</strong></div>
+  </a>
+  </div>
+<div class="exhibit-item">
+<a href="#" class="exhibit-link">
+  <img alt="Exhibit 5" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/images/Columnar-stromatolite-Minjaria.jpg?raw=true"/>
+<div><strong>Столбчатый строматолит миньярия</strong></div>
+  </a>
+  </div>
+</div>      
+</div>
+</main>
+<footer class="player">
+<audio id="audio" src="https://github.com/LiaFyr/museum-audiogiade/blob/main/audios/Room2-ru.mp3?raw=true"></audio>
+<div class="progress-bar">
+<div class="progress-fill"></div>
+</div>
+<div class="time-labels">
+<span>00:00</span>
+<span>00:00</span>
+</div>
+<div class="controls-wrapper">
+<div class="controls">
+<button class="rewind-backward">
+<span class="small-ten">10</span>
+<i class="fas fa-rotate-left"></i>
+</button>
+<a href="#" id="prev-exhibit-link">
+<button id="prev-exhibit"><i class="fas fa-backward"></i></button>
+</a>
+<button class="play"><i class="fas fa-play"></i></button>
+<a href="#" id="next-exhibit-link">
+<button id="next-exhibit"><i class="fas fa-forward"></i></button>
+</a>
+<button class="rewind-forward">
+<i class="fas fa-rotate-right"></i><span class="small-ten">10</span>
+</button>
+</div>
+<div class="volume-control">
+<i class="fas fa-volume-up"></i>
+<div class="volume-bar">
+<div class="volume-fill" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+</footer>
+</body>
+
